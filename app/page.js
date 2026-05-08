@@ -6,14 +6,25 @@ import {
   Portal,
   Container,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    fetch("/api/pokemones?token=ksgfkjwgfhdvhdshviea83y4") // Relative URL works for internal routes
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
+
   return (
     <Container>
       <div>
+        <div>
+          {data
+            ? data.cartas.map((pok) => <p key={pok.nombre}>{pok.nombre}</p>)
+            : "Loading"}
+        </div>
         <Button onClick={() => setOpen(!open)}>Open/close</Button>
       </div>
       <Drawer.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
